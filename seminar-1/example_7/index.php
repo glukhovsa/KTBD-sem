@@ -15,7 +15,18 @@ if ($conn) {
     echo 'Successfully connected to Oracle. <br>';
 
     $stid = oci_parse($conn, 'SELECT * FROM employees');
-    oci_execute($stid);  
+    oci_execute($stid);
+
+    echo "<table border='1'>\n";
+    while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
+        echo "<tr>\n";
+        foreach ($row as $item) {
+            echo "    <td>" . ($item !== null ? htmlentities($item, ENT_QUOTES) : "&nbsp;") . "</td>\n";
+        }
+        echo "</tr>\n";
+    }
+    echo "</table>\n";
+
 } else {
     $err = oci_error();
     echo 'Oracle Connect Error: '. $err['message'];
