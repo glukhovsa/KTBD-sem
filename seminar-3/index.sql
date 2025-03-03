@@ -1,0 +1,3 @@
+DROP INDEX I_PCBLib;
+CREATE UNIQUE INDEX I_PCBLib 
+        ON TPLG_PCB_Library (PCBLib_Name);
