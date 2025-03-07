@@ -1,0 +1,5 @@
+DECLARE
+    str VARCHAR(30) := '&str';
+BEGIN
+    DBMS_OUTPUT.PUT_LINE(UPPER(str));
+END;
