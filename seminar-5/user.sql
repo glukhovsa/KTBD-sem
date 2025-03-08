@@ -1,0 +1,3 @@
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('You are ' || TO_CHAR(USER));
+END;

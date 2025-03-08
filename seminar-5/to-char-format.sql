@@ -1,0 +1,3 @@
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Преобразуем: ' || TO_CHAR(1052, 'S9999'));
+END;
