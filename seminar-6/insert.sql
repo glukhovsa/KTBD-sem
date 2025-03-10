@@ -87,3 +87,5 @@ INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_W
     VALUES ((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),
         (SELECT Footprint_ID FROM TPLG_Footprint WHERE Footprint_Name = 'SOT23-3'),
         S_TPLG_Pad.NEXTVAL, 0.8, 0.5, 'Round Rectangle', NULL, 1.25, 0);
+
+INSERT INTO users_data_my (login, passw) VALUES ('gluhx', 'cac9debae0a1aa893273978e653ada26');

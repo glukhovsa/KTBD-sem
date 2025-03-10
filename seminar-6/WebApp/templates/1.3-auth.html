@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            .square {
+                position: absolute;
+                top:  50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                height: 450px;
+                width: 500px;
+                background-color: #bdb0b05b;
+                text-align: center;
+                border-radius: 50px;
+            }
+        </style>
+        <title>Авторизация</title>
+    </head>
+    <body>
+        <div class="square">
+            {% if status['data'] == False or (status['data'] == True and status['login'] == False) %}
+                <h3>Введите свои данные</h3>
+                <br>
+                <form method="post" action="/1.3-auth-check">
+                    <p>Введите логин:</p>   <input type="text" name="user_login" placeholder="Логин"><br>
+                    <p>Введите пароль:</p>  <input type="text" name="user_password" placeholder="Пароль"><br>
+                    <input type="submit" value="Войти">
+                </form>
+            {% endif %}
+            {% if status['data'] == True %}
+                {% if status['login'] == True %} <p style="color: rgb(67, 105, 9); text-align: center;">Вы авторизированны</p><i><a href="/">Главная страница</a></i>
+                {% else %} <p style="color: rgb(167, 51, 51);">Ошибка авторизации</p><i><a href="/">Главная страница</a></i>
+                {% endif %}
+            {% endif %}
+        </div>
+    </body>
+</html>

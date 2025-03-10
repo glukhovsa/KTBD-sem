@@ -2,22 +2,22 @@
 import cx_Oracle
 from pprint import pprint as pp
 con_db_data={
-  'db_user' : "SYS",
-  'db_password' : "root",
+  'db_user' : "GLUHX",
+  'db_password' : "gluhx",
   'db_host' : "localhost",
   'db_port' : 1521,
   'db_service_name' : "FREE"
 }
+# connection to database
 dsn_con = cx_Oracle.makedsn(
-      con_db_data['db_host'], 
-      con_db_data['db_port'], 
-      service_name = con_db_data['db_service_name']
-  )
+    con_db_data['db_host'], 
+    con_db_data['db_port'], 
+    service_name = con_db_data['db_service_name']
+)
 connection = cx_Oracle.connect(
     user = con_db_data['db_user'],
     password = con_db_data['db_password'],
     dsn = dsn_con,
-    mode = cx_Oracle.SYSDBA,
     encoding = "UTF-8"
 )
 
@@ -25,21 +25,19 @@ connection = cx_Oracle.connect(
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import redirect
+from flask import make_response
 app = Flask(__name__)
+
+#библиотека для шифрования данных
+import hashlib
 
 @app.route('/')
 def main():
     return render_template("main.html")
 
-@app.route('/user/<username>')
-def show_user_profile(username):
-  return f'User {username}'
 
-@app.route('/submit', methods=['POST'])
-def submit():
-  name = request.form['name']
-  return f'Hello, {name}'
-
+#ввод данных в бд
 @app.route('/1.2-input')
 def input_data():
   return render_template("1.2-input.html")
@@ -54,28 +52,65 @@ def input_data_do():
 
   status = {'db_connection': False, 'request': False}
 
-  # connection to database
   connection.ping()
   status['db_connection'] = True
 
   #вставка в таблицу
-  insert_request = 'INSERT INTO TPLG_PCB_Library (PCBLib_ID, PCBLib_Name, PCBLib_Footprint_Count) VALUES (S_TPLG_PCB_Library.NEXTVAL, \''+ PCB_Lib_parameter['PCB_Lib_name'] +'\', 5)'
+  insert_request = 'INSERT INTO TPLG_PCB_Library (PCBLib_ID, PCBLib_Name, PCBLib_Footprint_Count, PCBLib_YGOLib_Name) VALUES (S_TPLG_PCB_Library.NEXTVAL, \''+ PCB_Lib_parameter['PCB_Lib_name'] +'\', '+ str(PCB_Lib_parameter['PCB_Foot_count']) +', \''+ PCB_Lib_parameter['YGO_Lib_name'] +'\')'
+
   cur = connection.cursor()
   cur.execute(insert_request)
-  cur.execute('INSERT INTO TPLG_PCB_Library (PCBLib_ID, PCBLib_Name, PCBLib_Footprint_Count) VALUES (S_TPLG_PCB_Library.NEXTVAL, \''+ PCB_Lib_parameter['PCB_Lib_name'] +'1'+'\', 5)')
-
+  connection.commit() 
+  
   #проверка вставки 
-  select_request = 'SELECT * FROM TPLG_PCB_Library'
+  select_request = 'SELECT * FROM TPLG_PCB_Library WHERE PCBLib_Name = \'' + PCB_Lib_parameter['PCB_Lib_name'] +'\''
   cur.execute(select_request)
   result_check = cur.fetchall()
-  for row in result_check:
-    print(result_check)
   if result_check != None:
     status['request'] = True
   
   cur.close()
+  connection.close()
+  if status['request'] and status['db_connection']:
+    return render_template("1.2-ok.html")
+  else:
+    return "<h1>ERROR</h1>"
+
+
+#ввод засекреченных данных
+@app.route('/1.3-auth')
+def authorization():
+  if not request.cookies.get('auth_status_data'):
+    status = {'data' : False, 'login' : False}
+  else:
+    status = {'data' : eval(request.cookies.get('auth_status_data')),
+              'login' : eval(request.cookies.get('auth_status_login'))}
+  print(status)
+
+  return render_template("1.3-auth.html", status=status)
+
+@app.route('/1.3-auth-check', methods=['POST'])
+def authorization_check():
+  status = {'data' : True, 'login' : False}
+  user = {'login' : request.form['user_login'], 'password' : request.form['user_password']}
+
+  check_login = 'SELECT passw FROM users_data_my WHERE login = \''+ user['login']+'\''
+
+  cur = connection.cursor()
+  result = cur.execute(check_login)
+  select_password = cur.fetchall()
+  select_password = [m[0] for m in select_password]
+  user['password'] = hashlib.md5(user['password'].encode())
+  user['password'] = user['password'].hexdigest()
+  if user['password'] in select_password[0]:
+    status['login'] = True
+
   
-  return status
+  cur.close()
+  cook = make_response(redirect('/1.3-auth'))
+  cook.set_cookie('auth_status_data', str(status['data']))
+  cook.set_cookie('auth_status_login', str(status['login']))
+  return cook
 
 if __name__ == '__main__':
   app.run(debug=True)
