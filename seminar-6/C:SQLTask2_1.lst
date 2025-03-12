@@ -1,0 +1,23 @@
+
+Familia         Podchinenie                                                     
+--------------- ------------------------------                                  
+King            /King                                                           
+  Bean          /King/Bean                                                      
+  Counters      /King/Counters                                                  
+  Edelstein     /King/Edelstein                                                 
+    Greed       /King/Edelstein/Greed                                           
+      Cash      /King/Edelstein/Greed/Cash                                      
+      Maka      /King/Edelstein/Greed/Maka                                      
+      Tunsa     /King/Edelstein/Greed/Tunsa                                     
+    Mason       /King/Edelstein/Mason                                           
+      Venzl     /King/Edelstein/Mason/Venzl                                     
+      Walker    /King/Edelstein/Mason/Walker                                    
+
+Familia         Podchinenie                                                     
+--------------- ------------------------------                                  
+  Smith         /King/Smith                                                     
+    Point       /King/Smith/Point                                               
+    Powers      /King/Smith/Powers                                              
+
+14 rows selected.
+

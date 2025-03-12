@@ -22,7 +22,8 @@ CREATE TABLE TPLG_Footprint
     Footprint_Width       INTEGER   NOT NULL,
     Footprint_Pad_Count   NUMBER    NOT NULL, 
     Footprint_Instalation CHAR(20)  NOT NULL, 
-    Footprint_YGO         CHAR(20)  NULL
+    Footprint_YGO         CHAR(20)  NULL,
+    Footprint_Barcode     CHAR(30)  NULL
 );
 
 ALTER TABLE TPLG_Footprint

@@ -1,3 +1,7 @@
+###########################################
+######### Подключение библиотек ###########
+###########################################
+
 #Библиотека cx_Oracle для подключения к БД
 import cx_Oracle
 from pprint import pprint as pp
@@ -8,7 +12,13 @@ con_db_data={
   'db_port' : 1521,
   'db_service_name' : "FREE"
 }
-
+con_db_data_sys={
+  'db_user' : "SYS",
+  'db_password' : "root",
+  'db_host' : "localhost",
+  'db_port' : 1521,
+  'db_service_name' : "FREE"
+}
 
 #Библиотека flask для создания Web приложения
 from flask import Flask
@@ -21,6 +31,46 @@ app = Flask(__name__)
 #библиотека для шифрования данных
 import hashlib
 
+
+###########################################
+############ Функции для кода #############
+###########################################
+
+def connect_to_db():
+  # connection to database
+  dsn_con = cx_Oracle.makedsn(
+      con_db_data['db_host'], 
+      con_db_data['db_port'], 
+      service_name = con_db_data['db_service_name']
+  )
+  connection = cx_Oracle.connect(
+      user = con_db_data['db_user'],
+      password = con_db_data['db_password'],
+      dsn = dsn_con,
+      encoding = "UTF-8"
+  )
+  return connection
+
+def connect_to_db_sys():
+  # connection to database
+  dsn_con = cx_Oracle.makedsn(
+      con_db_data_sys['db_host'], 
+      con_db_data_sys['db_port'], 
+      service_name = con_db_data_sys['db_service_name']
+  )
+  connection = cx_Oracle.connect(
+      user = con_db_data_sys['db_user'],
+      password = con_db_data_sys['db_password'],
+      dsn = dsn_con,
+      mode=cx_Oracle.SYSDBA,
+      encoding = "UTF-8"
+  )
+  return connection
+
+
+###########################################
+############# Страницы сайта ##############
+###########################################
 @app.route('/')
 def main():
     return render_template("main.html")
@@ -122,18 +172,7 @@ def input_file():
 
 @app.route('/1.4-file-insert', methods=['POST'])
 def insert_from_file():
-  # connection to database
-  dsn_con = cx_Oracle.makedsn(
-      con_db_data['db_host'], 
-      con_db_data['db_port'], 
-      service_name = con_db_data['db_service_name']
-  )
-  connection = cx_Oracle.connect(
-      user = con_db_data['db_user'],
-      password = con_db_data['db_password'],
-      dsn = dsn_con,
-      encoding = "UTF-8"
-  )
+  connection = connect_to_db()
   file = request.files['file-data']
   file = file.readlines()
   for line in file:
@@ -155,7 +194,6 @@ def insert_from_file():
   return render_template("1.4-file-insert.html")
 
 
-
 #ввод данных по штрихкоду
 @app.route('/1.5-barcode')
 def barcode():
@@ -167,8 +205,53 @@ def barcode_redirect():
 
 @app.route('/1.5-barcode-read/<barcode>')
 def read_barcode(barcode):
+  connection = connect_to_db()
+  cur = connection.cursor()
+  select = 'SELECT * FROM TPLG_Footprint WHERE Footprint_Barcode = \'' + barcode +'\''
+  print(select)
+  cur.execute(select)
+  result = cur.fetchall()
+  cur.close()
+  connection.close()
+  return result
 
-  return "0"
+
+#вывод данных
+@app.route('/2.2-output')
+def output():
+  connection = connect_to_db_sys()
+  cur = connection.cursor()
+  select_request = 'SELECT \
+	e1.last_name, \
+    e1.salary, \
+    e2.last_name, \
+    e2.salary, \
+    e1.department_id as department_id, \
+    avg_salary.avg_salary as avg_salary \
+FROM \
+	employees e1 \
+INNER JOIN employees e2 ON \
+	e1.department_id = e2.department_id \
+INNER JOIN ( \
+	SELECT \
+		AVG(salary) AS avg_salary, \
+		department_id \
+	FROM \
+		employees \
+	GROUP BY \
+		department_id \
+) avg_salary ON \
+	avg_salary.department_id = e1.department_id \
+WHERE \
+	e1.salary > avg_salary.avg_salary \
+	AND e2.salary > e1.salary'
+  print(select_request) 
+  cur.execute(select_request) 
+  result = cur.fetchall() 
+  cur.close()
+  connection.close()
+  return render_template("/2.2-output.html", result = result, header=["Фамилия", "Оклад", "Фамилия", "Оклад", "Департамент", "Ср. зарплата"])
+
 
 if __name__ == '__main__':
   app.run(debug=True)

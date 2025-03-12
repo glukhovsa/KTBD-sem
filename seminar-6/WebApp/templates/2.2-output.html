@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+   <meta charset="UTF-8">
+   <title>Вывод</title>
+  </head>
+  <body>
+    <h2>Вывод запрашиваемых данных</h2>
+    <br>
+    <table style="border: 1px solid rgb(27, 22, 22);">
+        <tr>
+            {% for i in header %}
+                <td style="border: 1px solid rgb(27, 22, 22);"> {{i}} </td>
+            {% endfor %}
+        </tr>
+        {% for j in result %}
+        <tr>
+            {% for i in j %}
+                <td style="border: 1px solid rgb(27, 22, 22);"> {{i}} </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+  </body>
+</html>

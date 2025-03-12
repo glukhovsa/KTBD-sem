@@ -6,8 +6,8 @@ INSERT INTO TPLG_PCB_Library (PCBLib_ID, PCBLib_Name, PCBLib_Footprint_Count)
 
 PROMPT Добавляем SMD резистор 0603
 
-INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count)
-    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'R_0603', 2.8, 1, 'SMD', 2);
+INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count, Footprint_Barcode)
+    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'R_0603', 2.8, 1, 'SMD', 2, '2150000000017');
 
 INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_Width, Pad_Square, Pad_Hole_D, Pad_X, Pad_Y)
     VALUES ((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),
