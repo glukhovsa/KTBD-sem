@@ -8,18 +8,7 @@ con_db_data={
   'db_port' : 1521,
   'db_service_name' : "FREE"
 }
-# connection to database
-dsn_con = cx_Oracle.makedsn(
-    con_db_data['db_host'], 
-    con_db_data['db_port'], 
-    service_name = con_db_data['db_service_name']
-)
-connection = cx_Oracle.connect(
-    user = con_db_data['db_user'],
-    password = con_db_data['db_password'],
-    dsn = dsn_con,
-    encoding = "UTF-8"
-)
+
 
 #Библиотека flask для создания Web приложения
 from flask import Flask
@@ -37,6 +26,7 @@ def main():
     return render_template("main.html")
 
 
+
 #ввод данных в бд
 @app.route('/1.2-input')
 def input_data():
@@ -51,7 +41,18 @@ def input_data_do():
   PCB_Lib_parameter['YGO_Lib_name'] = request.form['YGO_Lib_name']
 
   status = {'db_connection': False, 'request': False}
-
+  # connection to database
+  dsn_con = cx_Oracle.makedsn(
+      con_db_data['db_host'], 
+      con_db_data['db_port'], 
+      service_name = con_db_data['db_service_name']
+  )
+  connection = cx_Oracle.connect(
+      user = con_db_data['db_user'],
+      password = con_db_data['db_password'],
+      dsn = dsn_con,
+      encoding = "UTF-8"
+  )
   connection.ping()
   status['db_connection'] = True
 
@@ -75,6 +76,7 @@ def input_data_do():
     return render_template("1.2-ok.html")
   else:
     return "<h1>ERROR</h1>"
+
 
 
 #ввод засекреченных данных
@@ -112,7 +114,61 @@ def authorization_check():
   cook.set_cookie('auth_status_login', str(status['login']))
   return cook
 
+
+#ввод данных из файла
+@app.route('/1.4-file')
+def input_file():
+  return render_template("1.4-file.html")
+
+@app.route('/1.4-file-insert', methods=['POST'])
+def insert_from_file():
+  # connection to database
+  dsn_con = cx_Oracle.makedsn(
+      con_db_data['db_host'], 
+      con_db_data['db_port'], 
+      service_name = con_db_data['db_service_name']
+  )
+  connection = cx_Oracle.connect(
+      user = con_db_data['db_user'],
+      password = con_db_data['db_password'],
+      dsn = dsn_con,
+      encoding = "UTF-8"
+  )
+  file = request.files['file-data']
+  file = file.readlines()
+  for line in file:
+    line1=str(line)
+    line_array = line1.split(",")
+    line_array[4]=line_array[4].rstrip('\n')
+    insert = 'INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length,' \
+      +'Footprint_Width, Footprint_Instalation, Footprint_Pad_Count) VALUES((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = \''+'MyLib'+ \
+        '\'), S_TPLG_Footprint.NEXTVAL,\''+line_array[0][2:] + '\','+line_array[1] + ','+line_array[2] + ',\''+line_array[3] + '\','+line_array[4]
+    if insert[len(insert) - 2] == "n":
+      insert = insert[:-3]+')'
+    else:
+      insert = insert[:-1]+')'
+    cur = connection.cursor()
+    print(insert)
+    cur.execute(insert)
+  connection.commit() 
+  connection.close()
+  return render_template("1.4-file-insert.html")
+
+
+
+#ввод данных по штрихкоду
+@app.route('/1.5-barcode')
+def barcode():
+  return render_template("1.5-barcode.html")
+
+@app.route('/1.5-barcode-redirect', methods=['POST'])
+def barcode_redirect():
+  return redirect(f'/1.5-barcode-read/{request.form['barcode']}')
+
+@app.route('/1.5-barcode-read/<barcode>')
+def read_barcode(barcode):
+
+  return "0"
+
 if __name__ == '__main__':
   app.run(debug=True)
-
-connection.close()

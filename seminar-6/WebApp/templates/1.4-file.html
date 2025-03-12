@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            .square {
+                position: absolute;
+                top:  50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                height: 200px;
+                width: 300px;
+                background-color: #bdb0b05b;
+                text-align: center;
+                border-radius: 50px;
+            }
+        </style>
+        <title>Ввод данных через файл</title>
+    </head>
+    <body>
+        <div class="square">
+            <form method="post" action="/1.4-file-insert"  enctype="multipart/form-data">
+                <p>Выберите файл:</p>   <input type="file" name="file-data"><br>
+                <input type="submit" value="Ввести файл">
+            </form>
+        </div>
+    </body>
+</html>

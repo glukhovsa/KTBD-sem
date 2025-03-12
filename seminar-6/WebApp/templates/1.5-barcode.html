@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <style>
+            .square {
+                position: absolute;
+                top:  50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                height: 200px;
+                width: 300px;
+                background-color: #bdb0b05b;
+                text-align: center;
+                border-radius: 50px;
+            }
+        </style>
+        <title>Авторизация</title>
+    </head>
+    <body>
+        <div class="square">
+            <form method="post" action="/1.5-barcode-redirect">
+                <p>Введите штрихкод:</p>   <input name="barcode"><br>
+                <input type="submit" value="Найти объект">
+            </form>
+        </div>
+    </body>
+</html>
