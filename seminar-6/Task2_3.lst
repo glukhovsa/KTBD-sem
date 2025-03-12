@@ -1,0 +1,29 @@
+
+Table dropped.
+
+
+Table created.
+
+
+1 row created.
+
+
+1 row created.
+
+
+Commit complete.
+
+
+    Number Group Number First Name           Last Name                          
+---------- ------------ -------------------- --------------------               
+         1            1 Stepan               Glukhov                            
+         2            2 Stepan               Glukhov                            
+         3            3 Stepan               Glukhov                            
+         4            1 Boris                Karyshev                           
+         5            2 Boris                Karyshev                           
+         6            3 Boris                Karyshev                           
+         7            4 Boris                Karyshev                           
+         8            5 Boris                Karyshev                           
+
+8 rows selected.
+

@@ -26,16 +26,23 @@ from flask import render_template
 from flask import request
 from flask import redirect
 from flask import make_response
+from flask import send_file
 app = Flask(__name__)
 
 #библиотека для шифрования данных
 import hashlib
 
+#библиотека для работы с PDF
+from fpdf import FPDF
+
+#для удаления файлов
+import os
 
 ###########################################
 ############ Функции для кода #############
 ###########################################
 
+#подключение к БД
 def connect_to_db():
   # connection to database
   dsn_con = cx_Oracle.makedsn(
@@ -51,6 +58,7 @@ def connect_to_db():
   )
   return connection
 
+#подключение к БЛ как SYSDBA
 def connect_to_db_sys():
   # connection to database
   dsn_con = cx_Oracle.makedsn(
@@ -67,6 +75,17 @@ def connect_to_db_sys():
   )
   return connection
 
+#расчёт границ таблицы
+def table_boundaries(array):
+  mas =[]
+  for j in array:
+    for i in range(len(j)):
+      if j == array[0]:
+        mas.append(len(str(j[i])))
+      elif len(str(j[i])) > mas[i]:
+        mas[i] = len(str(j[i]))
+  
+  return mas
 
 ###########################################
 ############# Страницы сайта ##############
@@ -251,6 +270,50 @@ WHERE \
   cur.close()
   connection.close()
   return render_template("/2.2-output.html", result = result, header=["Фамилия", "Оклад", "Фамилия", "Оклад", "Департамент", "Ср. зарплата"])
+
+
+#вывод данных в файл
+@app.route("/2.4-out-in-file")
+def out_into_file():
+  return render_template("2.4-out-file.html")
+
+@app.route("/2.4-out-in-file-send", methods=['POST'])
+def out_into_file_send():
+  connection = connect_to_db_sys()
+  cur = connection.cursor()
+  
+  select = 'SELECT salary "Salary" \
+    FROM (SELECT salary, MAX(hire_date) hire_date \
+      FROM (SELECT hire_date, salary \
+        FROM (SELECT hire_date, salary \
+          FROM employees \
+          ORDER BY hire_date DESC, salary DESC) \
+          WHERE rownum <= 50) \
+        GROUP BY salary \
+        ORDER BY 2 DESC) \
+    WHERE rownum<20'
+  cur.execute(select)
+  result = cur.fetchall()
+
+  count_symbols = table_boundaries(result)
+  
+  if request.form['file'] == 'pdf':
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+    for line in result:
+      pdf_line = ''
+
+      for i in range(len(line)):
+        pdf_line += str(line[i]) + ' '*(count_symbols[i] - len(str(line[i])) + 3)
+      pdf.cell(len(pdf_line), 10, txt=pdf_line, ln=1, align="C")
+    
+    response = make_response(pdf.output(dest='S').encode('latin-1'))
+    response.headers.set('Content-Disposition', 'attachment', filename='PDF' + '.pdf')
+    response.headers.set('Content-Type', 'application/pdf')
+    return response
+  
+  return "1"
 
 
 if __name__ == '__main__':

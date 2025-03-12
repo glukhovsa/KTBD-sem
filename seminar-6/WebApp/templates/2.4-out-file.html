@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <style>
+        .square {
+            position: absolute;
+            top:  50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            height: 200px;
+            width: 300px;
+            background-color: #bdb0b05b;
+            text-align: center;
+            border-radius: 50px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Вывод данных в файл</title>
+  </head>
+  <body>
+    <h2>Не хотите скачать файл?</h2>
+    <div class="square">
+        <form method="post" action="/2.4-out-in-file-send"  enctype="multipart/form-data">
+            <p>Какой формат файла:</p>
+            <input type='radio' name='file' value='pdf'>PDF<br>
+            <input type='radio' name='file' value='xls'>XLS<br>
+            <input type="submit" value="Скачать">
+        </form>
+    </div>
+  </body>
+</html>
