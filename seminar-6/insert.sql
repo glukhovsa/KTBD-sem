@@ -22,8 +22,8 @@ INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_W
 
 PROMPT Добавляем SMD резистор 0806
 
-INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count)
-    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'R_0805', 3.4, 1.6, 'SMD', 2);
+INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count, Footprint_Barcode)
+    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'R_0805', 3.4, 1.6, 'SMD', 2, '2150000000018');
 
 INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_Width, Pad_Square, Pad_Hole_D, Pad_X, Pad_Y)
     VALUES ((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),
@@ -38,8 +38,8 @@ INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_W
 
 PROMPT Добавляем SMD конденсатор 0603
 
-INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count)
-    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'C_0603', 2.8, 1, 'SMD', 2);
+INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count, Footprint_Barcode)
+    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'C_0603', 2.8, 1, 'SMD', 2, '2150000020018');
 
 INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_Width, Pad_Square, Pad_Hole_D, Pad_X, Pad_Y)
     VALUES ((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),
@@ -54,8 +54,8 @@ INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_W
 
 PROMPT Добавляем SMD конденсатор 0806
 
-INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count)
-    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'C_0805', 3.4, 1.6, 'SMD', 2);
+INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count, Footprint_Barcode)
+    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'C_0805', 3.4, 1.6, 'SMD', 2, '2150000000048');
 
 INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_Width, Pad_Square, Pad_Hole_D, Pad_X, Pad_Y)
     VALUES ((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),
@@ -70,8 +70,8 @@ INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_W
 
 PROMPT Добавляем микросхемы в корпусе SOT23-3
 
-INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count)
-    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'SOT23-3', 3.6, 1.2, 'SMD', 3);
+INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, Footprint_Width, Footprint_Instalation, Footprint_Pad_Count, Footprint_Barcode)
+    VALUES ( (SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),S_TPLG_Footprint.NEXTVAL, 'SOT23-3', 3.6, 1.2, 'SMD', 3, '215000333018');
 
 INSERT INTO TPLG_Pad (Pad_PCBLib_ID, Pad_Footprint_ID, Pad_ID, Pad_Length, Pad_Width, Pad_Square, Pad_Hole_D, Pad_X, Pad_Y)
     VALUES ((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = 'MyLib'),

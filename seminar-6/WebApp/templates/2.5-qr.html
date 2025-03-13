@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <style>
+        .square {
+            position: absolute;
+            top:  50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            width: 800px;
+            background-color: #bdb0b05b;
+            text-align: center;
+            border-radius: 50px;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Вывод штрихкода</title>
+    </head>
+    <body>
+        <H2>Вывод штрихкодов</H2>
+        <div class="square">
+            {% for qr in array %}
+                <img src="{{ qrcode(qr) }}">
+            {% endfor %}
+            
+            
+        </div>
+    </body>
+</html>

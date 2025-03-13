@@ -27,16 +27,21 @@ from flask import request
 from flask import redirect
 from flask import make_response
 from flask import send_file
+from flask_qrcode import QRcode
 app = Flask(__name__)
+QRcode(app)
 
 #библиотека для шифрования данных
 import hashlib
 
 #библиотека для работы с PDF
 from fpdf import FPDF
+import flask_excel as excel
 
-#для удаления файлов
-import os
+#для штрихкодов
+import barcode
+from barcode import EAN13
+from barcode.writer import ImageWriter
 
 ###########################################
 ############ Функции для кода #############
@@ -312,9 +317,35 @@ def out_into_file_send():
     response.headers.set('Content-Disposition', 'attachment', filename='PDF' + '.pdf')
     response.headers.set('Content-Type', 'application/pdf')
     return response
-  
-  return "1"
+  elif request.form['file'] == 'xls':
+    print(result)
+    return excel.make_response_from_array(result, "csv", file_name="export_data")
+  else:
+    return "1"
 
+#вывод штрихкодов
+@app.route("/2.5-qr")
+def qr():
+  connection = connect_to_db_sys()
+  cur = connection.cursor()
+  
+  select = 'SELECT salary "Salary" \
+    FROM (SELECT salary, MAX(hire_date) hire_date \
+      FROM (SELECT hire_date, salary \
+        FROM (SELECT hire_date, salary \
+          FROM employees \
+          ORDER BY hire_date DESC, salary DESC) \
+          WHERE rownum <= 50) \
+        GROUP BY salary \
+        ORDER BY 2 DESC) \
+    WHERE rownum<20'
+  cur.execute(select)
+  result = cur.fetchall()
+  array = [str(i)[1:-2] for i in result]
+  cur.close()
+  connection.close()
+  
+  return render_template("2.5-qr.html", array = array)
 
 if __name__ == '__main__':
   app.run(debug=True)
