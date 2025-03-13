@@ -34,9 +34,9 @@ QRcode(app)
 #библиотека для шифрования данных
 import hashlib
 
-#библиотека для работы с PDF
+#библиотека для работы с файлами
 from fpdf import FPDF
-import flask_excel as excel
+import xlsxwriter
 
 #для штрихкодов
 import barcode
@@ -318,8 +318,19 @@ def out_into_file_send():
     response.headers.set('Content-Type', 'application/pdf')
     return response
   elif request.form['file'] == 'xls':
-    print(result)
-    return excel.make_response_from_array(result, "csv", file_name="export_data")
+    workbook = xlsxwriter.Workbook('output.xlsx')
+    worksheet = workbook.add_worksheet()
+
+    # Write data to the worksheet
+    j=0
+    for line in result:
+      i = 0
+      for word in line:
+        worksheet.write(f'{chr(ord('A')+j)}{i}', word)
+
+    # Close the workbook
+    workbook.close()
+    return send_file('output.xlsx', as_attachment=True)
   else:
     return "1"
 
