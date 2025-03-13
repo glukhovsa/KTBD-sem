@@ -203,9 +203,9 @@ def insert_from_file():
     line1=str(line)
     line_array = line1.split(",")
     line_array[4]=line_array[4].rstrip('\n')
-    insert = 'INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length,' \
-      +'Footprint_Width, Footprint_Instalation, Footprint_Pad_Count) VALUES((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = \''+'MyLib'+ \
-        '\'), S_TPLG_Footprint.NEXTVAL,\''+line_array[0][2:] + '\','+line_array[1] + ','+line_array[2] + ',\''+line_array[3] + '\','+line_array[4]
+    insert = 'INSERT INTO TPLG_Footprint (Footprint_PCBLib_ID, Footprint_ID, Footprint_Name, Footprint_Length, \
+      Footprint_Width, Footprint_Instalation, Footprint_Pad_Count) VALUES((SELECT PCBLib_ID FROM TPLG_PCB_Library WHERE PCBLib_Name = \'MyLib\' \
+        ), S_TPLG_Footprint.NEXTVAL,\''+line_array[0][2:] + '\','+line_array[1] + ','+line_array[2] + ',\''+line_array[3] + '\','+line_array[4]
     if insert[len(insert) - 2] == "n":
       insert = insert[:-3]+')'
     else:
@@ -320,15 +320,15 @@ def out_into_file_send():
   elif request.form['file'] == 'xls':
     workbook = xlsxwriter.Workbook('output.xlsx')
     worksheet = workbook.add_worksheet()
-
-    # Write data to the worksheet
     j=0
     for line in result:
       i = 0
       for word in line:
-        worksheet.write(f'{chr(ord('A')+j)}{i}', word)
-
-    # Close the workbook
+        position = f'{chr(ord('A')+i)}{j+1}'
+        print(position)
+        worksheet.write(position, word)
+        i += 1
+      j += 1
     workbook.close()
     return send_file('output.xlsx', as_attachment=True)
   else:
